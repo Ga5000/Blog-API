@@ -14,6 +14,34 @@ public class Image {
 
     private String objectId;
 
-    @OneToOne(mappedBy = "image", cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "postId")
     private Post post;
+
+    public Image(String objectId, Post post) {
+        this.objectId = objectId;
+        this.post = post;
+    }
+
+    public Image() {}
+
+    public UUID getImageId() {
+        return imageId;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }

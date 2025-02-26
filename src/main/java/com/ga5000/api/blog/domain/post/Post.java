@@ -28,9 +28,8 @@ public class Post {
 
     private LocalDate updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_id", referencedColumnName = "imageId")
-    private Image image;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 
     @ManyToMany
     @JoinTable(
@@ -49,6 +48,8 @@ public class Post {
 
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostEngagement> postEngagements = new ArrayList<>(); // likes and dislikes on the post
+
+
 
 
 }
