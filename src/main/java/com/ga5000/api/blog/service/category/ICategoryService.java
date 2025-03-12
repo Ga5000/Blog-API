@@ -15,7 +15,6 @@ public interface ICategoryService {
     void deleteCategory(UUID categoryId);
 
     Set<CategoryResponse> getCategories();
-    Set<CategoryResponse> getPostCategories(UUID postId);
 
 
 }

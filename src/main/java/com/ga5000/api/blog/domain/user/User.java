@@ -49,10 +49,20 @@ public class User {
         this.profilePicture = profilePicture;
         this.googleId = googleId;
         this.createdAt = LocalDate.now();
-        this.role = Role.ADMIN; // change later
+        this.role = Role.USER;
         this.posts = posts;
         this.comments = comments;
     }
+
+    public User(String googleId, String email, String username, String profilePicture) {
+        this.username = username;
+        this.email = email;
+        this.profilePicture = profilePicture;
+        this.googleId = googleId;
+        this.createdAt = LocalDate.now();
+        this.role = Role.USER;
+    }
+
 
     public UUID getUserId() {
         return userId;

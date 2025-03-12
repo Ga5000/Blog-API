@@ -66,13 +66,8 @@ public class CategoryService implements ICategoryService{
                 .stream().map(dtoMapper::toCategoryResponse).collect(Collectors.toSet());
     }
 
-    @Override
-    public Set<CategoryResponse> getPostCategories(UUID postId) {
-        return categoryRepository.findPostCategories(postId)
-                .stream().map(dtoMapper::toCategoryResponse).collect(Collectors.toSet());
-    }
 
-    private void validateCategoryCreation(String name) {
+    private void validateCategoryCreation(String name) throws EntityAlreadyExistsException {
         categoryRepository.findByNameIgnoreCase(name)
                 .ifPresent(category -> {
                     throw new EntityAlreadyExistsException("Category with name '" + name + "' already exists.");
@@ -83,7 +78,7 @@ public class CategoryService implements ICategoryService{
         categoryRepository.save(category);
     }
 
-    private Category findById(UUID categoryId){
+    private Category findById(UUID categoryId) throws EntityNotFoundException{
         return findByIdOrThrow(
                 categoryId,
                 categoryRepository,

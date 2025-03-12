@@ -1,12 +1,15 @@
 package com.ga5000.api.blog.service.post;
 
-
 import com.ga5000.api.blog.dto.post.PostSearchResponse;
 import com.ga5000.api.blog.dto.post.search.SearchPostParams;
 import com.ga5000.api.blog.repository.post.PostRepository;
 import com.ga5000.api.blog.utils.DtoMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.UUID;
 
 import static com.ga5000.api.blog.utils.RepositoryUtils.findByIdOrThrow;
 
@@ -22,7 +25,13 @@ public class PostService implements IPostService{
 
 
     @Override
-    public Page<PostSearchResponse> searchPosts(SearchPostParams params, Pageable pageable) {
+    public void deletePost(UUID postId) {
+
+    }
+
+    @Override
+    public Page<PostSearchResponse> searchPosts(SearchPostParams params, Pageable pageable, Sort.Direction direction) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         return null;
     }
 }
