@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users_tb")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,7 +60,7 @@ public class User {
         this.profilePicture = profilePicture;
         this.googleId = googleId;
         this.createdAt = LocalDate.now();
-        this.role = Role.USER;
+        this.role = Role.ADMIN; // change later
     }
 
 

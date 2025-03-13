@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "images")
+@Table(name = "images_tb")
 public class Image {
 
     @Id

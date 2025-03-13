@@ -47,7 +47,7 @@ public class ImageService implements IImageService {
         imageRepository.save(image);
     }
 
-    private Image findById(UUID imageId){
+    private Image findById(UUID imageId) throws EntityNotFoundException{
         return  findByIdOrThrow(imageId, imageRepository, () -> new EntityNotFoundException(IMAGE_NOT_FOUND_MESSAGE));
     }
 }

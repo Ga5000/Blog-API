@@ -1,8 +1,8 @@
-package com.ga5000.api.blog.dto.post;
+package com.ga5000.api.blog.dto.post.search;
 
 
 import com.ga5000.api.blog.dto.image.ImageResponse;
-import com.ga5000.api.blog.dto.user.UserPostResponse;
+import com.ga5000.api.blog.dto.user.AuthorResponse;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,5 +12,5 @@ public record PostSearchResponse(UUID postId,
                                  String title,
                                  LocalDate createdAt,
                                  LocalDate updatedAt,
-                                 UserPostResponse userPostResponse) {
+                                 AuthorResponse author) {
 }

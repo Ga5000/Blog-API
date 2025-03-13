@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories_tb")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

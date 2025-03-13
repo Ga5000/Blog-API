@@ -1,5 +1,6 @@
 package com.ga5000.api.blog.service.category;
 
+import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.category.CategoryRequest;
 import com.ga5000.api.blog.dto.category.CategoryResponse;
 import com.ga5000.api.blog.dto.category.UpdateCategoryRequest;
@@ -15,6 +16,8 @@ public interface ICategoryService {
     void deleteCategory(UUID categoryId);
 
     Set<CategoryResponse> getCategories();
+
+    void associateCategoriesWithPost(List<UUID> categoryIds, UUID postId);
 
 
 }

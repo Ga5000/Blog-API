@@ -1,6 +1,7 @@
 package com.ga5000.api.blog.service.category;
 
 import com.ga5000.api.blog.domain.category.Category;
+import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.category.CategoryRequest;
 import com.ga5000.api.blog.dto.category.CategoryResponse;
 import com.ga5000.api.blog.dto.category.UpdateCategoryRequest;
@@ -12,11 +13,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.ga5000.api.blog.utils.RepositoryUtils.existsByIdOrThrow;
 import static com.ga5000.api.blog.utils.RepositoryUtils.findByIdOrThrow;
 
 @Service
@@ -56,14 +59,21 @@ public class CategoryService implements ICategoryService{
     @Transactional
     @Override
     public void deleteCategory(UUID categoryId) {
-        var existingCategory = findById(categoryId);
-        categoryRepository.delete(existingCategory);
+       existsByIdOrThrow(categoryId, categoryRepository, () -> new EntityNotFoundException(CATEGORY_NOT_FOUND_MESSAGE));
+        categoryRepository.deleteById(categoryId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Set<CategoryResponse> getCategories() {
         return categoryRepository.findAll(Sort.by("name"))
                 .stream().map(dtoMapper::toCategoryResponse).collect(Collectors.toSet());
+    }
+
+    @Transactional
+    @Override
+    public void associateCategoriesWithPost(List<UUID> categoryIds, UUID postId) {
+        categoryRepository.associateCategoriesWithPost(postId, categoryIds);
     }
 
 

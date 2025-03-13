@@ -38,7 +38,14 @@ public class SecurityConfig {
                         .requestMatchers("/oauth2/success").permitAll()
                         .requestMatchers("/login/**").permitAll() // Allow OAuth2 login endpoints
                         .requestMatchers("/oauth2/**").permitAll() // Allow OAuth2 endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/categories").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/categories").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/posts").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2AuthenticationSuccessHandler))

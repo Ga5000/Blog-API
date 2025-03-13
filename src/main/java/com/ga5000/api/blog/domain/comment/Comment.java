@@ -4,6 +4,7 @@ import com.ga5000.api.blog.domain.engagement.comment.CommentEngagement;
 import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.domain.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "comments_tb")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,6 +24,8 @@ public class Comment {
     private LocalDate createdAt;
 
     private LocalDate updatedAt;
+
+    private int replyCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
@@ -43,14 +47,29 @@ public class Comment {
 
     public Comment() {}
 
-    public Comment(String content, LocalDate updatedAt, User author,
+    public Comment(String content, LocalDate updatedAt, int replyCount, User author,
                    Post post, List<CommentEngagement> commentEngagements) {
         this.content = content;
         this.createdAt = LocalDate.now();
         this.updatedAt = updatedAt;
+        this.replyCount = replyCount;
         this.author = author;
         this.post = post;
         this.commentEngagements = commentEngagements;
+    }
+
+    public Comment(String content, Post post, User author) {
+        this.content = content;
+        this.post = post;
+        this.author = author;
+        this.createdAt = LocalDate.now();
+    }
+
+    public Comment(Comment parentComment, String content, User author) {
+        this.parentComment = parentComment;
+        this.content = content;
+        this.author = author;
+        this.createdAt = LocalDate.now();
     }
 
     public UUID getCommentId() {
@@ -79,6 +98,14 @@ public class Comment {
 
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
     }
 
     public User getAuthor() {

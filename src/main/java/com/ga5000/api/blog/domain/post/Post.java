@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts_tb")
 public class Post {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID postId;
@@ -33,7 +33,7 @@ public class Post {
 
     @ManyToMany
     @JoinTable(
-            name = "post_category",
+            name = "post_categories_tb",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
@@ -58,6 +58,13 @@ public class Post {
         this.categories = categories;
         this.comments = comments;
         this.postEngagements = postEngagements;
+    }
+
+    public Post(String title, String content, User author) {
+        this.title = title;
+        this.content = content;
+        this.createdAt = LocalDate.now();
+        this.author = author;
     }
 
     public UUID getPostId() {

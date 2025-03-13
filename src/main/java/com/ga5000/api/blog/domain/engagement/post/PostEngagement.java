@@ -6,8 +6,10 @@ import com.ga5000.api.blog.domain.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "post_engagements_tb")
 public class PostEngagement extends Engagement {
 
     @ManyToOne

@@ -28,7 +28,7 @@ public class MinioS3Service {
         this.minioClient = minioClient;
     }
 
-    public String uploadImage(MultipartFile file){
+    public String uploadImage(MultipartFile file) throws UploadImageException{
         validateFileType(file);
 
         try (var inputStream = file.getInputStream()) {
@@ -47,7 +47,7 @@ public class MinioS3Service {
         }
     }
 
-    public void deleteImage(String objectId) {
+    public void deleteImage(String objectId) throws UploadImageException {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
@@ -64,7 +64,7 @@ public class MinioS3Service {
         return String.format("%s/%s/%s", url, bucketName, objectId);
     }
 
-    private void validateFileType(MultipartFile file) {
+    private void validateFileType(MultipartFile file) throws UploadImageException {
         if (!ALLOWED_CONTENT_TYPES.contains(file.getContentType())) {
             throw new UploadImageException("Invalid file type. Only PNG and JPEG are allowed.");
         }
