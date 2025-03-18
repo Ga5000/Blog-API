@@ -1,9 +1,9 @@
 package com.ga5000.api.blog.service.category;
 
-import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.category.CategoryRequest;
 import com.ga5000.api.blog.dto.category.CategoryResponse;
 import com.ga5000.api.blog.dto.category.UpdateCategoryRequest;
+import com.ga5000.api.blog.middleware.exception.entity.IllegalEntityStateException;
 
 import java.util.List;
 import java.util.Set;
@@ -13,7 +13,7 @@ public interface ICategoryService {
     void createCategory(CategoryRequest request);
     void createCategories(List<CategoryRequest> requests);
     void updateCategory(UpdateCategoryRequest request);
-    void deleteCategory(UUID categoryId);
+    void deleteCategory(UUID categoryId) throws IllegalEntityStateException;
 
     Set<CategoryResponse> getCategories();
 

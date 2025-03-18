@@ -1,6 +1,6 @@
-package com.ga5000.api.blog.exception.image;
+package com.ga5000.api.blog.middleware.exception.image;
 
-import com.ga5000.api.blog.exception.BaseException;
+import com.ga5000.api.blog.middleware.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 public class UploadImageException extends BaseException {

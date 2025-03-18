@@ -4,7 +4,9 @@ import com.ga5000.api.blog.domain.comment.Comment;
 import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.domain.user.role.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +14,20 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users_tb")
-public class User {
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCache")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String username; // username -> provided by google Oauth
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; // e-mail -> provided by google Oauth
 
-    private String profilePicture; // url -> google Oauth
+    private String profilePicture; // url -> provided by google Oauth
 
     @Column(nullable = false, unique = true)
     private String googleId; // id -> provided by google Oauth
@@ -61,6 +65,14 @@ public class User {
         this.googleId = googleId;
         this.createdAt = LocalDate.now();
         this.role = Role.ADMIN; // change later
+    }
+
+    public User(String googleId, String email, String username, String profilePicture, Role role) {
+        this.username = username;
+        this.email = email;
+        this.profilePicture = profilePicture;
+        this.googleId = googleId;
+        this.role = role;
     }
 
 

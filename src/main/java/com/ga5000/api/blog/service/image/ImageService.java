@@ -41,6 +41,7 @@ public class ImageService implements IImageService {
         var existingImage = findById(imageId);
         minioS3Service.deleteImage(existingImage.getObjectId());
         imageRepository.delete(existingImage);
+        imageRepository.flush();
     }
 
     private void saveImage(Image image){

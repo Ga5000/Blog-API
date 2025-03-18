@@ -24,6 +24,11 @@ public class CommentEngagement extends Engagement {
         this.comment = comment;
     }
 
+    public CommentEngagement(User user, Comment comment) {
+        super(user);
+        this.comment = comment;
+    }
+
     public Comment getComment() {
         return comment;
     }

@@ -4,9 +4,7 @@ import com.ga5000.api.blog.domain.engagement.comment.CommentEngagement;
 import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.domain.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +19,9 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     private int replyCount;
 
@@ -31,7 +29,7 @@ public class Comment {
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "postId")
     private Post post;
 
@@ -47,10 +45,10 @@ public class Comment {
 
     public Comment() {}
 
-    public Comment(String content, LocalDate updatedAt, int replyCount, User author,
+    public Comment(String content, LocalDateTime updatedAt, int replyCount, User author,
                    Post post, List<CommentEngagement> commentEngagements) {
         this.content = content;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.updatedAt = updatedAt;
         this.replyCount = replyCount;
         this.author = author;
@@ -62,14 +60,14 @@ public class Comment {
         this.content = content;
         this.post = post;
         this.author = author;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     public Comment(Comment parentComment, String content, User author) {
         this.parentComment = parentComment;
         this.content = content;
         this.author = author;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     public UUID getCommentId() {
@@ -84,19 +82,15 @@ public class Comment {
         this.content = content;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

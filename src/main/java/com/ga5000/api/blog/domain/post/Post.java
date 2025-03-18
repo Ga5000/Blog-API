@@ -6,8 +6,7 @@ import com.ga5000.api.blog.domain.engagement.post.PostEngagement;
 import com.ga5000.api.blog.domain.image.Image;
 import com.ga5000.api.blog.domain.user.User;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -20,9 +19,9 @@ public class Post {
 
     private String content; // in html format
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private Image image;
@@ -47,11 +46,11 @@ public class Post {
 
     public Post() {}
 
-    public Post(String title, String content,LocalDate updatedAt, Image image, User author,
+    public Post(String title, String content,LocalDateTime updatedAt, Image image, User author,
                 Set<Category> categories, List<Comment> comments, List<PostEngagement> postEngagements) {
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.updatedAt = updatedAt;
         this.image = image;
         this.author = author;
@@ -63,7 +62,7 @@ public class Post {
     public Post(String title, String content, User author) {
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.author = author;
     }
 
@@ -87,19 +86,15 @@ public class Post {
         this.content = content;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

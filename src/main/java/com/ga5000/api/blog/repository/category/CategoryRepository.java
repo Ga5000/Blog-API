@@ -23,5 +23,11 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 """, nativeQuery = true)
     void associateCategoriesWithPost(@Param("postId") UUID postId, @Param("categoriesIds") List<UUID> categoriesIds);
 
+    @Query(value = "SELECT COUNT(*) FROM post_categories_tb pc " +
+            "JOIN posts_tb p ON p.post_id = pc.post_id " +
+            "WHERE pc.category_id = :categoryId " +
+            "GROUP BY pc.post_id HAVING COUNT(pc.category_id) = 1", nativeQuery = true)
+    Long countPostsWithOnlyCategory(UUID categoryId);
+
 
 }

@@ -15,9 +15,9 @@ public abstract class Engagement {
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
-    private int likeCount;
+    private int likeCount; // if it's a dislike it's null
 
-    private int dislikeCount;
+    private int dislikeCount; // if it's a like it's null
 
     public Engagement() {}
 
@@ -25,6 +25,10 @@ public abstract class Engagement {
         this.user = user;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
+    }
+
+    public Engagement(User user) {
+        this.user = user;
     }
 
     public UUID getEngagementId() {

@@ -1,4 +1,4 @@
-package com.ga5000.api.blog.exception;
+package com.ga5000.api.blog.middleware.exception;
 
 import org.springframework.http.HttpStatus;
 

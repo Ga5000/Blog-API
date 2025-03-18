@@ -4,8 +4,8 @@ import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.comment.CommentRequest;
 import com.ga5000.api.blog.dto.comment.CommentResponse;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import java.util.UUID;
 
 public interface ICommentService {
@@ -13,7 +13,9 @@ public interface ICommentService {
     void deleteComment(UUID commentId);
     void updateCommentContent(UUID commentId, CommentRequest request);
     void replyComment(UUID commentId, CommentRequest request);
-    Page<CommentResponse> getCommentReplies(UUID commentId, int pageSize);
-    Page<CommentResponse> getPostComments(Post post, int pageSize);
+    void likeOrDislikeComment(UUID commentId, boolean likeOrDislike);
+    Page<CommentResponse> getCommentReplies(UUID commentId, Pageable pageable);
+    Page<CommentResponse> getPostComments(UUID postId, Pageable pageable, Sort.Direction direction);
+
 
 }

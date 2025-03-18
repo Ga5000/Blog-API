@@ -1,19 +1,20 @@
 package com.ga5000.api.blog.service.category;
 
 import com.ga5000.api.blog.domain.category.Category;
-import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.category.CategoryRequest;
 import com.ga5000.api.blog.dto.category.CategoryResponse;
 import com.ga5000.api.blog.dto.category.UpdateCategoryRequest;
-import com.ga5000.api.blog.exception.entity.EntityAlreadyExistsException;
+import com.ga5000.api.blog.middleware.exception.entity.EntityAlreadyExistsException;
+import com.ga5000.api.blog.middleware.exception.entity.EntityNotFoundException;
+import com.ga5000.api.blog.middleware.exception.entity.IllegalEntityStateException;
 import com.ga5000.api.blog.repository.category.CategoryRepository;
 import com.ga5000.api.blog.utils.DtoMapper;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class CategoryService implements ICategoryService{
     }
 
 
+    @CacheEvict(value = "categories", key = "'allCategories'")
     @Transactional
     @Override
     public void createCategory(CategoryRequest request) {
@@ -42,11 +44,13 @@ public class CategoryService implements ICategoryService{
         saveCategory(new Category(request.name()));
     }
 
+    @CacheEvict(value = "categories", key = "'allCategories'")
     @Override
     public void createCategories(List<CategoryRequest> requests) {
         requests.forEach(this::createCategory);
     }
 
+    @CacheEvict(value = "categories", key = "'allCategories'")
     @Transactional
     @Override
     public void updateCategory(UpdateCategoryRequest request) {
@@ -56,14 +60,21 @@ public class CategoryService implements ICategoryService{
         saveCategory(existingCategory);
     }
 
+    @CacheEvict(value = "categories", key = "'allCategories'")
     @Transactional
     @Override
-    public void deleteCategory(UUID categoryId) {
+    public void deleteCategory(UUID categoryId) throws IllegalEntityStateException{
        existsByIdOrThrow(categoryId, categoryRepository, () -> new EntityNotFoundException(CATEGORY_NOT_FOUND_MESSAGE));
+        Long count = categoryRepository.countPostsWithOnlyCategory(categoryId);
+
+        if (count != null && count > 0) {
+            throw new IllegalEntityStateException("Cannot delete the only category associated with a post.");
+        }
         categoryRepository.deleteById(categoryId);
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "categories", key = "'allCategories'")
     @Override
     public Set<CategoryResponse> getCategories() {
         return categoryRepository.findAll(Sort.by("name"))
@@ -73,6 +84,9 @@ public class CategoryService implements ICategoryService{
     @Transactional
     @Override
     public void associateCategoriesWithPost(List<UUID> categoryIds, UUID postId) {
+        for (UUID categoryId : categoryIds) {
+            findById(categoryId);
+        }
         categoryRepository.associateCategoriesWithPost(postId, categoryIds);
     }
 

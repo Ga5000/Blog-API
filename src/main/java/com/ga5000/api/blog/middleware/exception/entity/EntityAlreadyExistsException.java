@@ -1,6 +1,6 @@
-package com.ga5000.api.blog.exception.entity;
+package com.ga5000.api.blog.middleware.exception.entity;
 
-import com.ga5000.api.blog.exception.BaseException;
+import com.ga5000.api.blog.middleware.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 public class EntityAlreadyExistsException extends BaseException {

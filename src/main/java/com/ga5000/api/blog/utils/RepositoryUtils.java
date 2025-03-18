@@ -2,7 +2,6 @@ package com.ga5000.api.blog.utils;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -14,11 +13,6 @@ public class RepositoryUtils {
         if (!repository.existsById(id)) {
             throw exceptionSupplier.get();
         }
-    }
-
-
-    public static <T> boolean areFieldsEqual(T field1, T field2) {
-        return Objects.equals(field1, field2);
     }
 
 }

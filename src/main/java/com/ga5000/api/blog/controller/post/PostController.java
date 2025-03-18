@@ -1,11 +1,14 @@
 package com.ga5000.api.blog.controller.post;
 
+import com.ga5000.api.blog.controller.user.UserController;
+import com.ga5000.api.blog.dto.comment.CommentRequest;
 import com.ga5000.api.blog.dto.comment.CommentResponse;
 import com.ga5000.api.blog.dto.post.PostRequest;
 import com.ga5000.api.blog.dto.post.PostResponse;
 import com.ga5000.api.blog.dto.post.search.PostSearchResponse;
 import com.ga5000.api.blog.dto.post.search.SearchPostParams;
 import com.ga5000.api.blog.service.post.PostService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,17 +34,22 @@ import static com.ga5000.api.blog.utils.RequestMessageUtils.SUCCESS_KEY;
 @RequestMapping("/api/posts")
 public class PostController implements IPostController{
     private final PostService postService;
-    private final PagedResourcesAssembler<PostSearchResponse> pagedResourcesAssembler;
+    private final PagedResourcesAssembler<PostSearchResponse> pagedPostsResourcesAssembler;
+    private final PagedResourcesAssembler<CommentResponse> pagedCommentsResourcesAssembler;
 
-    public PostController(PostService postService, PagedResourcesAssembler<PostSearchResponse> pagedResourcesAssembler) {
+    public PostController(PostService postService, PagedResourcesAssembler<PostSearchResponse> pagedPostsResourcesAssembler,
+                          PagedResourcesAssembler<CommentResponse> pagedCommentsResourcesAssembler) {
         this.postService = postService;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.pagedPostsResourcesAssembler = pagedPostsResourcesAssembler;
+        this.pagedCommentsResourcesAssembler = pagedCommentsResourcesAssembler;
     }
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<Map<String, String>> createPost(@ModelAttribute PostRequest request) {
-        postService.createPost(request);
+    public ResponseEntity<Map<String, String>> createPost(@RequestPart("request") PostRequest request,
+                                                          @RequestPart("file") MultipartFile file) {
+        postService.createPost(request, file);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(SUCCESS_KEY, "Post created successfully"));
     }
@@ -63,7 +71,7 @@ public class PostController implements IPostController{
 
     @PatchMapping(value = "/{postId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<Map<String, String>> updatePostImage(@PathVariable("postId") UUID postId, @ModelAttribute MultipartFile file) {
+    public ResponseEntity<Map<String, String>> updatePostImage(@PathVariable("postId") UUID postId, @RequestPart("file") MultipartFile file) {
         postService.updatePostImage(postId, file);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(SUCCESS_KEY, "Post image updated successfully"));
     }
@@ -75,6 +83,23 @@ public class PostController implements IPostController{
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Map.of(SUCCESS_KEY, "Post deleted successfully"));
     }
 
+    @PostMapping("/{postId}/likeOrDislike")
+    @Override
+    public ResponseEntity<Void> likeOrDislikePost(@PathVariable("postId") UUID postId,
+                                                  @RequestParam boolean likeOrDislike) {
+        postService.likeOrDislikePost(postId, likeOrDislike);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/{postId}/comment")
+    @Override
+    public ResponseEntity<Map<String, String>> commentOnPost(@PathVariable("postId") UUID postId,
+                                                             @RequestBody @Valid CommentRequest request) {
+        postService.commentOnPost(postId, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(SUCCESS_KEY, "Comment created successfully"));
+    }
+
     @GetMapping("/{postId}")
     @Override
     public ResponseEntity<PostResponse> getPostInfo(@PathVariable("postId") UUID postId) {
@@ -83,8 +108,15 @@ public class PostController implements IPostController{
 
     @GetMapping("/{postId}/comments")
     @Override
-    public ResponseEntity<Page<CommentResponse>> getPostComments(@PathVariable("postId") UUID postId, int pageSize) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostComments(postId, pageSize));
+    public ResponseEntity<PagedModel<EntityModel<CommentResponse>>> getPostComments(@PathVariable("postId") UUID postId,
+                                                                 @PageableDefault(size = 20) Pageable pageable,
+                                                                                    @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        Page<CommentResponse> comments = postService.getPostComments(postId, pageable, direction);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pagedCommentsResourcesAssembler.toModel(comments, comment -> EntityModel.of(comment,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+                                        .getUserInfo(comment.author().username()))
+                                .withSelfRel())));
     }
 
     @GetMapping("/search")
@@ -94,15 +126,14 @@ public class PostController implements IPostController{
             @RequestParam(required = false) Set<UUID> categories,
             @RequestParam(required = false) LocalDate minDate,
             @RequestParam(required = false) LocalDate maxDate,
-            @RequestParam(required = false) Boolean mostLiked,
             @PageableDefault(size = 20) Pageable pageable,
             @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
 
         Page<PostSearchResponse> posts = postService.
-                searchPosts(new SearchPostParams(title, categories, minDate, maxDate, mostLiked), pageable, direction);
+                searchPosts(new SearchPostParams(title, categories, minDate, maxDate), pageable, direction);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(pagedResourcesAssembler.toModel(posts, post -> EntityModel.of(post,
+                .body(pagedPostsResourcesAssembler.toModel(posts, post -> EntityModel.of(post,
                         WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PostController.class).getPostInfo(post.postId()))
                                 .withSelfRel())));
     }

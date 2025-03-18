@@ -2,6 +2,7 @@ package com.ga5000.api.blog.utils;
 
 import com.ga5000.api.blog.domain.category.Category;
 import com.ga5000.api.blog.domain.comment.Comment;
+import com.ga5000.api.blog.domain.engagement.Engagement;
 import com.ga5000.api.blog.domain.image.Image;
 import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.domain.user.User;
@@ -11,6 +12,7 @@ import com.ga5000.api.blog.dto.image.ImageResponse;
 import com.ga5000.api.blog.dto.post.PostResponse;
 import com.ga5000.api.blog.dto.post.search.PostSearchResponse;
 import com.ga5000.api.blog.dto.user.AuthorResponse;
+import com.ga5000.api.blog.dto.user.UserInfoResponse;
 import com.ga5000.api.blog.service.minioS3.MinioS3Service;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +46,14 @@ public class DtoMapper {
         );
     }
 
+    public UserInfoResponse toUserInfoResponse(User user) {
+        return new UserInfoResponse(
+                user.getUsername(),
+                user.getProfilePicture(),
+                user.getCreatedAt()
+        );
+    }
+
     public PostResponse toPostResponse(Post post) {
         return new PostResponse(
                 post.getPostId(),
@@ -52,7 +62,9 @@ public class DtoMapper {
                 post.getContent(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                toAuthorResponse(post.getAuthor())
+                toAuthorResponse(post.getAuthor()),
+                post.getPostEngagements().stream().mapToInt(Engagement::getLikeCount).sum(),
+                post.getPostEngagements().stream().mapToInt(Engagement::getDislikeCount).sum()
         );
     }
 
@@ -74,7 +86,10 @@ public class DtoMapper {
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 toAuthorResponse(comment.getAuthor()),
-                comment.getReplyCount()
+                comment.getReplyCount(),
+                comment.getCommentEngagements().stream().mapToInt(Engagement::getLikeCount).sum(),
+                comment.getCommentEngagements().stream().mapToInt(Engagement::getDislikeCount).sum()
+
         );
     }
 

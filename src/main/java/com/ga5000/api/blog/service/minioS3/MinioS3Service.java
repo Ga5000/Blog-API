@@ -1,6 +1,6 @@
 package com.ga5000.api.blog.service.minioS3;
 
-import com.ga5000.api.blog.exception.image.UploadImageException;
+import com.ga5000.api.blog.middleware.exception.image.UploadImageException;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;

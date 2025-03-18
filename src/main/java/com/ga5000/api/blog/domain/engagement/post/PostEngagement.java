@@ -23,6 +23,11 @@ public class PostEngagement extends Engagement {
         this.post = post;
     }
 
+    public PostEngagement(User user, Post post) {
+        super(user);
+        this.post = post;
+    }
+
     public Post getPost() {
         return post;
     }

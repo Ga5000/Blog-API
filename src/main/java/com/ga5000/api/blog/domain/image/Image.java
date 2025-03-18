@@ -16,7 +16,7 @@ public class Image {
     @Column(nullable = false)
     private String objectId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "postId")
     private Post post;
 
@@ -33,10 +33,6 @@ public class Image {
 
     public String getObjectId() {
         return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
     }
 
     public Post getPost() {

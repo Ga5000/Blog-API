@@ -3,8 +3,6 @@ package com.ga5000.api.blog.repository.post.specification;
 import com.ga5000.api.blog.domain.post.Post;
 import com.ga5000.api.blog.dto.post.search.SearchPostParams;
 import org.springframework.data.jpa.domain.Specification;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +22,6 @@ public class PostSpecification {
             }
             if (params.maxDate() != null) {
                 predicates.add(builder.lessThanOrEqualTo(root.get("createdAt"), params.maxDate()));
-            }
-            if (params.mostLiked()) {
-                Join<Post, ?> engagementJoin = root.join("postEngagements", JoinType.LEFT);
-                query.groupBy(root.get("postId"));
-                query.orderBy(builder.desc(builder.coalesce(builder.sum(engagementJoin.get("likeCount")), 0L)));
             }
             return builder.and(predicates.toArray(new Predicate[0]));
         };
