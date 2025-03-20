@@ -1,0 +1,777 @@
+{
+	"info": {
+		"_postman_id": "fb3e1bdc-9c4a-4ca8-bdc8-203a8ecf9c3d",
+		"name": "Blog",
+		"description": "## Blog API\n\n_**Made with:**_\n\n- Java\n    \n- Spring Boot\n    \n- MySQL\n    \n- Redis\n    \n- Redisson\n    \n- MinioS3\n    \n- Docker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36934187"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Create Category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"Technology\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the admin to create a new category.\n\n#### Request Body\n\n- `name` _(String, required)_: The name of the category.\n    \n\n#### Responses\n\n## `201 Created`\n\n``` json\n{\n    \"success\": \"Category created successfully\"\n}\n\n ```\n\n`409 Conflict`\n\n``` json\n{\"error\": \"Category with name 'Technology' already exists.\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Category Bulk",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    { \"name\" : \"Java\"},\r\n    { \"name\" : \"Spring Boot\"}\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/categories/bulk",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"bulk"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the admin to add multiple categories in bulk.\n\n#### Request Body\n\n- `[name, name, name,...]` _(String, required)_: The names of the categories.\n    \n\n#### Responses\n\n## `201 Created`\n\n``` json\n{\"success\": \"Categories were created successfully\"}\n\n ```\n\n`409 Conflict`\n\n``` json\n{\"error\": \"Category with name 'Java' already exists.\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get Categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to get all categories available.\n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n[\n    {\n        \"categoryId\": \"722df7fd-c377-41b2-8bbb-f7fbb545210f\",\n        \"name\": \"Technology\"\n    },\n    {\n        \"categoryId\": \"1b2ae138-4f17-40a1-8fd3-de2abff08613\",\n        \"name\": \"Spring Boot\"\n    },\n    {\n        \"categoryId\": \"c3458085-7130-42c5-ae13-4f25a4905fcc\",\n        \"name\": \"Java\"\n    }\n]\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```\n\n`503 Service Unavailable`\n\n``` json\n{\"error\": \"Our data service is currently unavailable. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH",
+					"item": [
+						{
+							"name": "Update Category Name",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n     \"name\" : \"Tech\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/categories/{categoryId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"{categoryId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the admin to update a category name.\n\n#### Request Param\n\n- `categoryId` _(UUID, required)_: The id of the category\n    \n\n#### Request Body\n\n- `name` _(String, required)_: The name of the category.\n    \n\n#### Responses\n\n## `200 OK`\n\n``` json\n{\"success\": \"Category updated successfully\"}\n\n ```\n\n`409 Conflict`\n\n``` json\n{\"error\": \"Category with name 'Technology' already exists.\"}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Category not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "Delete Category",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/categories/{categoryId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"{categoryId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the admin to delete a category.\n\n#### Request Param\n\n- `categoryId` _(UUID, required)_: The id of the category\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n## `204 No Content`\n\n``` json\n{\"success\": \"Category deleted successfully\"}\n\n ```\n\n`409 Conflict`\n\n``` json\n{\"error\": \"Cannot delete the only category associated with a post.\"}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Category not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "- **POST, PATCH, DELETE -** **`Admin Only`**"
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Create Post",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "request",
+											"value": "",
+											"contentType": "application/json",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/posts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to create a post.\n\n## Request Body `form-data`\n\n`request - type: Text | Content-Type: application/json`\n\n``` json\n{\n  \"title\": \"My First Blog Post\",\n  \"content\": \"<p class=&#x27;preserveHtml&#x27; class=\\\"preserveHtml\\\">Post content in HTML tags</p>\",\n  \"categories\": [\n    \"722df7fd-c377-41b2-8bbb-f7fbb545210f\",\n    \"1b2ae138-4f17-40a1-8fd3-de2abff08613\",\n    \"c3458085-7130-42c5-ae13-4f25a4905fcc\"\n  ]\n}\n\n ```\n\n`file - type: File`\n\n- `.png`\n    \n- `.jpeg`\n    \n\n## Responses\n\n`201 Created`\n\n``` json\n{\n\"success\": \"Post created successfully\"\n}\n\n ```\n\n`400 Bad Request`\n\n``` json\n{\"error\": \"Failed to upload image\"}\n{\"error\": \"A file is missing from the request.\"}\n\n ```\n\n`503 Service Unavailable`\n\n``` json\n{\"error\": \"File storage service is currently unavailable. Please try again later.\"}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Category not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Comment On Post",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"First comment\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}/comment",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}",
+										"comment"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to comment on a post.\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n\n#### Request Body\n\n- `content` _(String, required)_: The content of the comment.\n    \n\n#### Responses\n\n`201 Created`\n\n``` json\n{\n\"success\": \"Comment created successfully\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "LikeOrDislikePost",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}?likeOrDislike=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}"
+									],
+									"query": [
+										{
+											"key": "likeOrDislike",
+											"value": "true"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to like a post.\n\n#### Request Param\n\n- `likeOrDislike` _(boolean, required)_: The action that will be performed.\n    \n\n`true -> like`\n\n`false -> dislike`\n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`201 Created`\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH",
+					"item": [
+						{
+							"name": "Update Post Title",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}/title?newTitle=text",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}",
+										"title"
+									],
+									"query": [
+										{
+											"key": "newTitle",
+											"value": "text"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to edit their post title.\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n- `newTitle` _(String required)_: The new title of the post\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n{\n\"success\": \"Post title updated successfully\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Post Content",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newContent\" : \"<p>New Content</p>\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}/content",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}",
+										"content"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to update their post content.\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n\n#### Request Body\n\n- `newContent` _(String, required)_ HTML\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n{\n\"success\": \"Post content updated successfully\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Post Image",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/gbrli/OneDrive/Pictures/Screenshots/p.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}/image",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}",
+										"image"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to update their post image\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n\n#### Request Body `form-data`\n\n`file - type: File`\n\n- `.png`\n    \n- `.jpeg`\n    \n\n## Responses\n\n`200 OK`\n\n``` json\n{\n\"success\": \"Post image updated successfully\"\n}\n\n ```\n\n`400 Bad Request`\n\n``` json\n{\"error\": \"Failed to upload image\"}\n{\"error\": \"A file is missing from the request.\"}\n\n ```\n\n`503 Service Unavailable`\n\n``` json\n{\"error\": \"File storage service is currently unavailable. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "Delete Post",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to delete their post.\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n## `204 No Content`\n\n``` json\n{\"success\": \"Post deleted successfully\"}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get Post",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user get a post info.\n\n#### Request Param\n\n- `postId` _(UUID, required)_: The id of the post\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 Ok`\n\n``` json\n{\n    \"postId\": \"e2364453-fb5a-4c4c-836e-247bb9cf13e3\",\n    \"title\": \"My First Blog Post\",\n    \"image\": {\n        \"imageId\": \"afb165a7-fc04-43c0-8eac-a0326f21af0f\",\n        \"url\": \"http://localhost:9000/blog/b8a68da1-14da-4158-9c8e-a82d5079e2c4-p.png-2025-03-20\"\n    },\n    \"content\": \"<p class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Post content in HTML tags</p>\",\n    \"createdAt\": \"2025-03-20T10:32:54.74138\",\n    \"updatedAt\": null,\n    \"author\": {\n        \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n        \"username\": \"Gabriel Lisboa\"\n    },\n    \"likeCount\": 0,\n    \"dislikeCount\": 0\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "SearchPosts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/search?title=&categories=&minDate=&maxDate=&page=0&size=20&direction=ASC",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"search"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": ""
+										},
+										{
+											"key": "categories",
+											"value": ""
+										},
+										{
+											"key": "minDate",
+											"value": ""
+										},
+										{
+											"key": "maxDate",
+											"value": ""
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										},
+										{
+											"key": "direction",
+											"value": "ASC"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user search for posts and filter them by params if he wants.\n\n#### Request Param\n\n- `title` _(String, optional)_ : Search text for post titles\n    \n- `categories` _(List, optional)_: Filter posts by category IDs\n    \n- `minDate` _(LocalDate, optional)_ : Earliest creation date `(format: YYYY-MM-DD)`\n    \n- `maxDate`_(LocalDate, optional)_ : StartFragmentLatest creation date `(format: YYYY-MM-DD)`\n    \n- `page` _(Integer, required)_ : Page number\n    \n- `size` _(Integer, optional)_ : Posts per page `(default: 20)`\n    \n- `direction` _(String, optional)_ : Sorting order `(ASC or DESC, default: ASC)`\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n{\n    \"_embedded\": {\n        \"postSearchResponseList\": [\n            {\n                \"postId\": \"e2364453-fb5a-4c4c-836e-247bb9cf13e3\",\n                \"image\": {\n                    \"imageId\": \"afb165a7-fc04-43c0-8eac-a0326f21af0f\",\n                    \"url\": \"http://localhost:9000/blog/b8a68da1-14da-4158-9c8e-a82d5079e2c4-p.png-2025-03-20\"\n                },\n                \"title\": \"My First Blog Post\",\n                \"createdAt\": \"2025-03-20T10:32:54.74138\",\n                \"updatedAt\": null,\n                \"author\": {\n                    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n                    \"username\": \"Gabriel Lisboa\"\n                },\n                \"_links\": {\n                    \"self\": {\n                        \"href\": \"http://localhost:8080/api/posts/e2364453-fb5a-4c4c-836e-247bb9cf13e3\"\n                    }\n                }\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/api/posts/search?title=&categories=&minDate=&maxDate=&direction=ASC&page=0&size=20&sort=title,asc\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Post Comments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/{postId}/comments?page=0&size=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{postId}",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user see the comments of a post\n\n- `page` _(Integer, required)_ : Page number\n    \n- `size` _(Integer, optional)_ : Posts per page `(default: 20)`\n    \n- `direction` _(String, optional)_ : Sorting order `(ASC or DESC, default: ASC)`\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n{\n    \"_embedded\": {\n        \"commentResponseList\": [\n            {\n                \"commentId\": \"5fdd2050-7c01-4a64-a014-6edc3097bca5\",\n                \"content\": \"First comment\",\n                \"createdAt\": \"2025-03-20T12:23:45.847709\",\n                \"updatedAt\": null,\n                \"author\": {\n                    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n                    \"username\": \"Gabriel Lisboa\"\n                },\n                \"replyCount\": 0,\n                \"likeCount\": 0,\n                \"dislikeCount\": 0,\n                \"_links\": {\n                    \"self\": {\n                        \"href\": \"http://localhost:8080/api/user/Gabriel Lisboa\"\n                    }\n                }\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/api/posts/e2364453-fb5a-4c4c-836e-247bb9cf13e3/comments?page=0&size=20&sort=createdAt,asc\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Reply To Comment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\" : \"Reply to first comment\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/comments/{commentId}/reply",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"comments",
+										"{commentId}",
+										"reply"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to reply to a comment.\n\n#### Request Param\n\n- `commentId` _(UUID, required)_: The id of the comment\n    \n\n#### Request Body\n\n- `content` _(String, required)_: the content of the reply\n    \n\n#### Responses\n\n#### Responses\n\n`201 Created`\n\n``` json\n{\n\"success\": \"Comment replied successfully\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "LikeOrDislike Comment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/comments/{commentId}?likeOrDislike=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"comments",
+										"{commentId}"
+									],
+									"query": [
+										{
+											"key": "likeOrDislike",
+											"value": "true"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to like a comment.\n\n#### Request Param\n\n- `likeOrDislike` _(boolean, required)_: The action that will be performed.\n    \n\n`true -> like`\n\n`false -> dislike`\n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`201 Created`\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Comment not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH",
+					"item": [
+						{
+							"name": "Update Comment Content",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\" : \"New Updated First Comment\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/comments/{commentId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"comments",
+										"{commentId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to update their comment content.\n\n#### Request Param\n\n- `commentId` _(UUID, required)_: The id of the comment\n    \n\n#### Request Body\n\n- `content` _(String, required)_\n    \n\n#### Responses\n\n`200 OK`\n\n``` json\n{\n\"success\": \"Post content updated successfully\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Post not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "Delete Comment",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/comments/{commentId}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"comments",
+										"{commentId}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to delete their comment.\n\n#### Request Param\n\n- `commentId` _(UUID, required)_: The id of the comment\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n## `204 No Content`\n\n``` json\n{\"success\": \"Comment deleted successfully\"}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Comment not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get Comment Replies",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/comments/{commentId}/replies?page=0&size=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"comments",
+										"{commentId}",
+										"replies"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to get the replies of a comment.\n\n- `page` _(Integer, required)_ : Page number\n    \n- `size` _(Integer, optional)_ : Posts per page `(default: 20)`\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n**`200 OK`**\n\n``` json\n{\n    \"_embedded\": {\n        \"commentResponseList\": [\n            {\n                \"commentId\": \"96237d0d-e22a-4b7c-84c3-00d326ca5419\",\n                \"content\": \"Reply to first comment\",\n                \"createdAt\": \"2025-03-20T12:52:39.520997\",\n                \"updatedAt\": null,\n                \"author\": {\n                    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n                    \"username\": \"Gabriel Lisboa\"\n                },\n                \"replyCount\": 0,\n                \"likeCount\": 0,\n                \"dislikeCount\": 0,\n                \"_links\": {\n                    \"self\": {\n                        \"href\": \"http://localhost:8080/api/user/Gabriel Lisboa\"\n                    }\n                }\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/api/comments/5fdd2050-7c01-4a64-a014-6edc3097bca5/replies?page=0&size=20&sort=createdAt,desc\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"Comment not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get User Posts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/user/{username}/posts?page=0&size=5&direction=ASC",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"{username}",
+										"posts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "direction",
+											"value": "ASC"
+										}
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user see the posts a user has made.\n\n#### Request Param\n\n- `page` _(Integer, required)_ : Page number\n    \n- `size` _(Integer, optional)_ : Posts per page `(default: 5)`\n    \n- `direction` _(String, optional)_ : Sorting order `(ASC or DESC, default: ASC)`\n    \n- `username` _(String, required)_ : The username of the user\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n**`200 OK`**\n\n``` json\n{\n    \"_embedded\": {\n        \"postSearchResponseList\": [\n            {\n                \"postId\": \"e2364453-fb5a-4c4c-836e-247bb9cf13e3\",\n                \"image\": {\n                    \"imageId\": \"afb165a7-fc04-43c0-8eac-a0326f21af0f\",\n                    \"url\": \"http://localhost:9000/blog/b8a68da1-14da-4158-9c8e-a82d5079e2c4-p.png-2025-03-20\"\n                },\n                \"title\": \"My First Blog Post\",\n                \"createdAt\": \"2025-03-20T10:32:54.74138\",\n                \"updatedAt\": null,\n                \"author\": {\n                    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n                    \"username\": \"Gabriel Lisboa\"\n                },\n                \"_links\": {\n                    \"self\": {\n                        \"href\": \"http://localhost:8080/api/posts/e2364453-fb5a-4c4c-836e-247bb9cf13e3\"\n                    }\n                }\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/api/user/Gabriel Lisboa/posts?direction=ASC&page=0&size=5&sort=createdAt,asc\"\n        }\n    },\n    \"page\": {\n        \"size\": 5,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"User with username '{username}' not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Current User Info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/user/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user it's own profile info.\n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 Ok`\n\n``` json\n{\n    \"username\": \"Gabriel Lisboa\",\n    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n    \"createdAt\": \"2025-03-20\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"User not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/user/{username}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"{username}"
+									]
+								},
+								"description": "### API Request Description\n\nThis endpoint allows the user to see another user profile info.\n\n#### Request Param\n\n- `username` _(String, required)_ : The username of the user\n    \n\n#### Request Body\n\n- `null`\n    \n\n#### Responses\n\n`200 Ok`\n\n``` json\n{\n    \"username\": \"Gabriel Lisboa\",\n    \"profilePicture\": \"https://lh3.googleusercontent.com/a/ACg8ocJm_gnsCfugSfykDuamsJ7lPThD2Xej05AUToPCaFcuSACFjIQ5=s96-c\",\n    \"createdAt\": \"2025-03-20\"\n}\n\n ```\n\n`404 Not Found`\n\n``` json\n{\"error\": \"User with username '{username}' not found\"}\n\n ```\n\n`500 Internal Server Error`\n\n``` json\n{\"error\" : \"An unexpected error occurred. Please try again later.\"}\n\n ```"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

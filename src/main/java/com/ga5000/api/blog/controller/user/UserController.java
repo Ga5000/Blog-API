@@ -32,9 +32,9 @@ public class UserController implements IUserController {
     public ResponseEntity<PagedModel<EntityModel<PostSearchResponse>>> getUserPosts(@PathVariable("username") String username,
                                                                                     @PageableDefault(size = 5) Pageable pageable,
                                                                                     @RequestParam(defaultValue = "ASC")
-                                                                                        Sort.Direction sortDirection) {
+                                                                                        Sort.Direction direction) {
 
-        Page<PostSearchResponse> posts = userService.getUserPosts(username, pageable, sortDirection);
+        Page<PostSearchResponse> posts = userService.getUserPosts(username, pageable, direction);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(pagedPostsResourcesAssembler.toModel(posts, post -> EntityModel.of(post,

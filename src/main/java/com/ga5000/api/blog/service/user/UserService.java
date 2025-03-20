@@ -45,6 +45,9 @@ public class UserService implements IUserService{
                 pageable.getPageSize(),
                 Sort.by(direction, "createdAt"));
 
+        userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with username " + username));
+
         Page<Post> posts = postService.getUserPosts(username, pageable);
 
         return posts.map(dtoMapper::toPostSearchResponse);
