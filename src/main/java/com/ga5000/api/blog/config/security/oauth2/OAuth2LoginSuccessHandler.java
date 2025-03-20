@@ -4,6 +4,7 @@ import com.ga5000.api.blog.domain.user.User;
 import com.ga5000.api.blog.service.auth.AuthService;
 import com.ga5000.api.blog.service.token.TokenService;
 import com.ga5000.api.blog.service.user.userDetails.CustomUserDetails;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -27,18 +28,21 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String googleId = oAuth2User.getAttribute("sub");
-        if (googleId == null) {
-            response.sendRedirect("/error");
-            return;
-        }
+        String email = oAuth2User.getAttribute("email");
 
-        User user = authService.registerUserIfNonExistent(oAuth2User, googleId);
-        CustomUserDetails userDetails = new CustomUserDetails(user.getUserId(), user.getGoogleId(), user.getUsername(), user.getRole());
+        User user = authService.registerUserIfNonExistent(oAuth2User, email);
+        CustomUserDetails userDetails = new CustomUserDetails(user.getUserId(), user.getUsername(), user.getRole());
 
         String token = tokenService.generateToken(userDetails);
 
-        response.setContentType("application/json");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
+        Cookie cookie = new Cookie("AuthToken", token);
+        cookie.setHttpOnly(false); 
+        cookie.setSecure(false); // set to true if in production
+        cookie.setPath("/");
+        cookie.setMaxAge(48 * 60 * 60);
+
+        response.addCookie(cookie);
+        response.sendRedirect("/api/posts/search?page=0&direction=ASC");
+
     }
 }

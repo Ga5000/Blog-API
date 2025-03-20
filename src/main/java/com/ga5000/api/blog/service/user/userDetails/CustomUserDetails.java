@@ -11,13 +11,11 @@ import java.util.UUID;
 
 public class CustomUserDetails implements UserDetails {
     private final UUID userId;
-    private final String googleId;
     private final String username;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(UUID userId, String googleId, String username, Role role) {
+    public CustomUserDetails(UUID userId, String username, Role role) {
         this.userId = userId;
-        this.googleId = googleId;
         this.username = username;
         this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
     }
@@ -26,9 +24,6 @@ public class CustomUserDetails implements UserDetails {
         return userId;
     }
 
-    public String getGoogleId() {
-        return googleId;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

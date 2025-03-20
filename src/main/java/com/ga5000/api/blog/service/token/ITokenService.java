@@ -5,7 +5,7 @@ import com.ga5000.api.blog.service.user.userDetails.CustomUserDetails;
 
 public interface ITokenService {
     String generateToken(CustomUserDetails user);
-    String extractGoogleId(String token);
+    String extractUserId(String token);
     boolean validateToken(String token);
 
 }

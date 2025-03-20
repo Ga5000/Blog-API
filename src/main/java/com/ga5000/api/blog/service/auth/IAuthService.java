@@ -8,6 +8,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.UUID;
 
 public interface IAuthService {
-    User registerUserIfNonExistent(OAuth2User oAuth2User, String googleId);
+    User registerUserIfNonExistent(OAuth2User oAuth2User, String email);
     UUID getCurrentUserId() throws AuthenticationException;
 }

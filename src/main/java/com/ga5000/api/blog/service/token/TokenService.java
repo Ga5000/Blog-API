@@ -24,7 +24,7 @@ public class TokenService implements ITokenService {
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
-                .withSubject(user.getGoogleId())
+                .withSubject(user.getUserId().toString())
                 .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                         .filter(role -> role.startsWith("ROLE_"))
                         .findFirst().orElse(null))
@@ -34,7 +34,7 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public String extractGoogleId(String token) {
+    public String extractUserId(String token) {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey))
                 .build()
                 .verify(token);

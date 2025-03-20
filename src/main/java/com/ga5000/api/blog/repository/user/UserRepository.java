@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findByGoogleId(String googleId);
-
 
     @Query("SELECT new com.ga5000.api.blog.service.user.userDetails.CustomUserDetails(" +
-            "u.userId, u.googleId, u.username, u.role) " +
-            "FROM User u WHERE u.googleId = :googleId")
-    CustomUserDetails findCustomUserDetailsByGoogleId(@Param("googleId") String googleId);
+            "u.userId, u.username, u.role) " +
+            "FROM User u WHERE u.userId = :userId")
+    CustomUserDetails findCustomUserDetailsByUserId(@Param("userId") UUID userId);
 
     Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
 }

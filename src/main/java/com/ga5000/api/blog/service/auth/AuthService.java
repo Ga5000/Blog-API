@@ -16,23 +16,29 @@ import java.util.UUID;
 @Service
 public class AuthService implements IAuthService {
 
-    private final TokenService tokenService;
     private final UserRepository userRepository;
 
-    public AuthService(TokenService tokenService, UserRepository userRepository) {
-        this.tokenService = tokenService;
+    public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Transactional
     @Override
-    public User registerUserIfNonExistent(OAuth2User oAuth2User, String googleId) {
-        return userRepository.findByGoogleId(googleId)
+    public User registerUserIfNonExistent(OAuth2User oAuth2User, String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> {
+                    // If the user exists but has no profile picture, update it
+                    if (user.getProfilePicture() == null || user.getProfilePicture().isEmpty()) {
+                        String picture = (String) oAuth2User.getAttributes().get("picture");
+                        user.setProfilePicture(picture);
+                        return userRepository.save(user);
+                    }
+                    return user;
+                })
                 .orElseGet(() -> {
-                    String email = (String) oAuth2User.getAttributes().get("email");
                     String username = (String) oAuth2User.getAttributes().get("name");
                     String picture = (String) oAuth2User.getAttributes().get("picture");
-                    return createUser(googleId, email, username, picture);
+                    return createUser(email, username, picture);
                 });
     }
 
@@ -46,8 +52,8 @@ public class AuthService implements IAuthService {
     }
 
 
-    private User createUser(String googleId, String email, String username, String picture) {
-        var newUser = new User(googleId, email, username, picture);
+    private User createUser(String email, String username, String picture) {
+        var newUser = new User(email, username, picture);
         return userRepository.save(newUser);
     }
 

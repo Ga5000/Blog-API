@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class IllegalEntityStateException extends BaseException {
     public IllegalEntityStateException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message, HttpStatus.CONFLICT);
     }
 }

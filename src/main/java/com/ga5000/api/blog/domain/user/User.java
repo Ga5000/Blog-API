@@ -29,9 +29,6 @@ public class User implements Serializable {
 
     private String profilePicture; // url -> provided by google Oauth
 
-    @Column(nullable = false, unique = true)
-    private String googleId; // id -> provided by google Oauth
-
     private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -46,32 +43,29 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String username, String email, String profilePicture, String googleId,
+    public User(String username, String email, String profilePicture,
                 List<Post> posts, List<Comment> comments) {
         this.username = username;
         this.email = email;
         this.profilePicture = profilePicture;
-        this.googleId = googleId;
         this.createdAt = LocalDate.now();
         this.role = Role.USER;
         this.posts = posts;
         this.comments = comments;
     }
 
-    public User(String googleId, String email, String username, String profilePicture) {
+    public User(String email, String username, String profilePicture) {
         this.username = username;
         this.email = email;
         this.profilePicture = profilePicture;
-        this.googleId = googleId;
         this.createdAt = LocalDate.now();
-        this.role = Role.ADMIN; // change later
+        this.role = Role.USER;
     }
 
-    public User(String googleId, String email, String username, String profilePicture, Role role) {
+    public User(String email, String username, String profilePicture, Role role) {
         this.username = username;
         this.email = email;
         this.profilePicture = profilePicture;
-        this.googleId = googleId;
         this.role = role;
     }
 
@@ -102,14 +96,6 @@ public class User implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public String getGoogleId() {
-        return googleId;
-    }
-
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
     }
 
     public LocalDate getCreatedAt() {

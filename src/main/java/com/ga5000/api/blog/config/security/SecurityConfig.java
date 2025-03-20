@@ -36,21 +36,22 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/index.html").permitAll()
-                        .requestMatchers("/oauth2/success").permitAll()
-                        .requestMatchers("/login/**").permitAll() // Allow OAuth2 login endpoints
-                        .requestMatchers("/oauth2/**").permitAll() // Allow OAuth2 endpoints
+                        .requestMatchers(
+                                "/oauth2/success",
+                                "/login/**",
+                                "/oauth2/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/posts").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PATCH, "/api/posts/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/categories").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/categories").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/categories").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/comments/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/comments/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PATCH, "/api/comments").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/comments").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated())
@@ -60,7 +61,7 @@ public class SecurityConfig {
                 .securityContext(security -> security
                         .securityContextRepository(new HttpSessionSecurityContextRepository()))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/logout")

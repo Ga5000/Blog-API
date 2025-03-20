@@ -32,14 +32,14 @@ public class CommentController implements ICommentController{
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @DeleteMapping("{commentId}/delete")
+    @DeleteMapping("{commentId}")
     @Override
     public ResponseEntity<Map<String, String>> deleteComment(@PathVariable("commentId") UUID commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Map.of(SUCCESS_KEY, "Comment deleted successfully"));
     }
 
-    @PatchMapping("{commentId}/update/content")
+    @PatchMapping("{commentId}")
     @Override
     public ResponseEntity<Map<String, String>> updateCommentContent(@PathVariable("commentId") UUID commentId,
                                                                     @RequestBody @Valid CommentRequest request) {
@@ -56,7 +56,7 @@ public class CommentController implements ICommentController{
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(SUCCESS_KEY, "Comment replied successfully"));
     }
 
-    @PostMapping("/{commentId}/likeOrDislike")
+    @PostMapping("/{commentId}")
     @Override
     public ResponseEntity<Void> likeOrDislikeComment(@PathVariable("commentId") UUID commentId, @RequestParam boolean likeOrDislike) {
         commentService.likeOrDislikeComment(commentId, likeOrDislike);

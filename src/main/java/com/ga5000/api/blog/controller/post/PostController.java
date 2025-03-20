@@ -5,6 +5,7 @@ import com.ga5000.api.blog.dto.comment.CommentRequest;
 import com.ga5000.api.blog.dto.comment.CommentResponse;
 import com.ga5000.api.blog.dto.post.PostRequest;
 import com.ga5000.api.blog.dto.post.PostResponse;
+import com.ga5000.api.blog.dto.post.UpdatePostContentRequest;
 import com.ga5000.api.blog.dto.post.search.PostSearchResponse;
 import com.ga5000.api.blog.dto.post.search.SearchPostParams;
 import com.ga5000.api.blog.service.post.PostService;
@@ -63,8 +64,8 @@ public class PostController implements IPostController{
 
     @PatchMapping("/{postId}/content")
     @Override
-    public ResponseEntity<Map<String, String>> updatePostContent(@PathVariable("postId") UUID postId, @RequestBody String newContent) {
-        postService.updatePostContent(postId, newContent);
+    public ResponseEntity<Map<String, String>> updatePostContent(@PathVariable("postId") UUID postId, @RequestBody UpdatePostContentRequest request) {
+        postService.updatePostContent(postId, request.newContent());
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(SUCCESS_KEY, "Post content updated successfully"));
     }
 
@@ -76,14 +77,14 @@ public class PostController implements IPostController{
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(SUCCESS_KEY, "Post image updated successfully"));
     }
 
-    @DeleteMapping("/{postId}/delete")
+    @DeleteMapping("/{postId}")
     @Override
     public ResponseEntity<Map<String, String>> deletePost(@PathVariable("postId") UUID postId) {
         postService.deletePost(postId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Map.of(SUCCESS_KEY, "Post deleted successfully"));
     }
 
-    @PostMapping("/{postId}/likeOrDislike")
+    @PostMapping("/{postId}")
     @Override
     public ResponseEntity<Void> likeOrDislikePost(@PathVariable("postId") UUID postId,
                                                   @RequestParam boolean likeOrDislike) {
